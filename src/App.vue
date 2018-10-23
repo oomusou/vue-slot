@@ -1,28 +1,43 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <todo-list :source="todos">
+      <template slot-scope="{ todo }">
+        <span v-if="todo.completed">✓</span>
+        {{ todo.title }}
+      </template>
+    </todo-list>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import TodoList from './components/todo-list.vue';
+import { fetchTodos } from './api/todos.api';
+
+const mounted = function() {
+  const response = res =>
+    this.todos = res.data.slice(0, 5);
+
+  fetchTodos()
+    .then(response);
+};
+
+const components = {
+  TodoList,
+};
+
+const data = function() {
+  return {
+    todos: [],
+  };
+};
 
 export default {
   name: 'app',
-  components: {
-    HelloWorld,
-  },
+  components,
+  data,
+  mounted,
 };
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
